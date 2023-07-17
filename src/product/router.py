@@ -1,16 +1,16 @@
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, insert
 
 from src.settings.database import get_async_session
-from src.product import models
+from src.product import models, schemas
 
 
 router = APIRouter(prefix="/product", tags=["product"])
 
 
 @router.get("/")
-async def get_specific_operations(
+async def get_products(
     offset: int = 0,
     limit: int = Query(default=100, lte=100),
     session: AsyncSession = Depends(get_async_session),
@@ -18,3 +18,11 @@ async def get_specific_operations(
     sql = select(models.Product).order_by(models.Product.id).limit(limit).offset(offset)
     db_products = (await session.execute(sql)).scalars().unique().all()
     return db_products
+
+
+@router.post("/")
+async def add_specific_product(schema: schemas.ProductCreate, session: AsyncSession = Depends(get_async_session)):
+    stmt = insert(models.Product).values(**schema.dict())
+    await session.execute(stmt)
+    await session.commit()
+    return {"status": "success"}

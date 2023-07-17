@@ -29,19 +29,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = config("POSTGRES_USER")
     POSTGRES_PASSWORD: str = config("POSTGRES_PASSWORD")
     POSTGRES_DB: str = config("POSTGRES_DB")
-    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = "postgresql+asyncpg://postgres:postgres@marketplace_db:5432/postgres" 
-
-    #@validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    #def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
-    #    if isinstance(v, str):
-    #        return v
-    #    return PostgresDsn.build(
-    #        scheme="postgresql+asyncpg",
-    #        user=values.get("POSTGRES_USER"),
-    #        password=values.get("POSTGRES_PASSWORD"),
-    #        host=values.get("POSTGRES_SERVER"),
-    #        path=f"/{values.get('POSTGRES_DB') or ''}",
-    #    )
+    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = config("DATABASE_URL") 
 
     SMTP_TLS: bool = True
     SMTP_PORT: Optional[int] = 587
