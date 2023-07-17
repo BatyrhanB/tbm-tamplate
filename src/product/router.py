@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, insert
 
@@ -21,8 +21,19 @@ async def get_products(
 
 
 @router.post("/")
-async def add_specific_product(schema: schemas.ProductCreate, session: AsyncSession = Depends(get_async_session)):
+async def add_specific_product(
+    schema: schemas.ProductCreate, session: AsyncSession = Depends(get_async_session)
+):
     stmt = insert(models.Product).values(**schema.dict())
     await session.execute(stmt)
     await session.commit()
     return {"status": "success"}
+
+
+@router.get("/{product_id}")
+async def get_product(product_id: int, session : AsyncSession = Depends(get_async_session)):
+    sql = select(models.Product).where(models.Product.id == product_id)
+    db_product = (await session.execute(sql)).scalars().all()
+    if not db_product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return db_product
