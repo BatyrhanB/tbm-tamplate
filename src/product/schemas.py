@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 class CategoryBase(BaseModel):
     title: str
-    description: str
+    description: Optional[str]
 
 
 class CategoryCreate(CategoryBase):
@@ -21,13 +21,13 @@ class Category(CategoryBase):
 
 class ProductBase(BaseModel):
     title: str
-    description: str
+    description: Optional[str]
     category_id: int
-    type: str
-    origin: str
-    certification: str
-    color: str
-    price: float
+    type: Optional[str]
+    origin: Optional[str]
+    certification: Optional[str]
+    color: Optional[str]
+    price: Optional[float]
 
 
 class ProductCreate(ProductBase):
@@ -37,7 +37,6 @@ class ProductCreate(ProductBase):
 class Product(ProductBase):
     id: int
     created_at: datetime
-    category: Category
 
     class Config:
         orm_mode = True

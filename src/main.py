@@ -5,6 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from src.settings.config import settings
 from src.product.router import router as product_router
+from src.product.router import category_router
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -26,6 +27,12 @@ app.include_router(
     product_router,
     prefix="/api/v1",
     tags=["product"],
+)
+
+app.include_router(
+    category_router,
+    prefix="/api/v1",
+    tags=["category"],
 )
 
 if __name__ == "__main__":

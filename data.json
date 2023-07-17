@@ -1,0 +1,14 @@
+{
+  "title": "example title",
+  "description": "example description",
+  "category_id": 1,
+  "type": "example type",
+  "origin": "China",
+  "certification": "Grammy",
+  "color": "black",
+  "price": 999
+}
+{
+  "title": "category 10",
+  "description": "desc"
+}
