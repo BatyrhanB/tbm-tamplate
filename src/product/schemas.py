@@ -16,7 +16,7 @@ class Category(CategoryBase):
     id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ProductBase(BaseModel):
@@ -39,11 +39,11 @@ class Product(ProductBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class CategoryWithProducts(Category):
     products: List[Product] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True

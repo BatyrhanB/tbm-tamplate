@@ -2,7 +2,8 @@ import secrets
 from decouple import config
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import AnyHttpUrl, BaseSettings, EmailStr, PostgresDsn, validator
+from pydantic import AnyHttpUrl, EmailStr, validator
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -29,7 +30,7 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = config("POSTGRES_USER")
     POSTGRES_PASSWORD: str = config("POSTGRES_PASSWORD")
     POSTGRES_DB: str = config("POSTGRES_DB")
-    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = config("DATABASE_URL") 
+    SQLALCHEMY_DATABASE_URI: Optional[Any] = config("DATABASE_URL")
 
     SMTP_TLS: bool = True
     SMTP_PORT: Optional[int] = 587
@@ -37,7 +38,7 @@ class Settings(BaseSettings):
     SMTP_USER: Optional[str] = config("SMTP_USER")
     SMTP_PASSWORD: Optional[str] = config("SMTP_PASSWORD")
     EMAILS_FROM_EMAIL: Optional[EmailStr] = config("EMAILS_FROM_EMAIL")
-    EMAILS_FROM_NAME: Optional[str] = "SaleHub"
+    EMAILS_FROM_NAME: Optional[str] = "MarketPlace"
 
     @validator("EMAILS_FROM_NAME")
     def get_project_name(cls, v: Optional[str], values: Dict[str, Any]) -> str:

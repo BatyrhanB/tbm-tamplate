@@ -8,13 +8,19 @@ from src.settings.config import settings
 from src.auth import User
 
 
-engine = create_async_engine(settings.SQLALCHEMY_DATABASE_URI, future=True, echo=True,
-                             execution_options={"isolation_level": "AUTOCOMMIT"})
+engine = create_async_engine(
+    settings.SQLALCHEMY_DATABASE_URI,
+    future=True,
+    echo=True,
+    execution_options={"isolation_level": "AUTOCOMMIT"},
+)
 
-async_session_maker = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
+async_session_maker = async_sessionmaker(
+    engine, expire_on_commit=False, class_=AsyncSession
+)
+
 
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
-    print("HEREEEE", settings.SQLALCHEMY_DATABASE_URI)
     async with async_session_maker() as session:
         yield session
 
