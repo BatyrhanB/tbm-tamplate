@@ -1,3 +1,4 @@
+import uuid
 import uvicorn
 
 from fastapi import FastAPI
@@ -6,6 +7,13 @@ from starlette.middleware.cors import CORSMiddleware
 from src.settings.config import settings
 from src.product.router import router as product_router
 from src.product.router import category_router
+
+from fastapi_users import FastAPIUsers
+from src.auth.managers import get_user_manager
+from src.auth.security import auth_backend
+from src.auth.models import User
+from src.auth.schemas import UserCreate, UserRead
+
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -22,6 +30,35 @@ if settings.BACKEND_CORS_ORIGINS:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+
+fastapi_users = FastAPIUsers[User, uuid.UUID](
+    get_user_manager,
+    [auth_backend],
+)
+
+app.include_router(
+    fastapi_users.get_auth_router(auth_backend),
+    prefix="/auth/jwt",
+    tags=["auth"],
+)
+app.include_router(
+    fastapi_users.get_register_router(UserRead, UserCreate),
+    prefix="/auth",
+    tags=["auth"],
+)
+
+app.include_router(
+    fastapi_users.get_verify_router(UserRead),
+    prefix="/auth",
+    tags=["auth"],
+)
+
+app.include_router(
+    fastapi_users.get_reset_password_router(),
+    prefix="/auth",
+    tags=["auth"],
+)
 
 app.include_router(
     product_router,
