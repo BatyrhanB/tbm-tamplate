@@ -31,6 +31,7 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = config("POSTGRES_PASSWORD")
     POSTGRES_DB: str = config("POSTGRES_DB")
     SQLALCHEMY_DATABASE_URI: Optional[Any] = config("DATABASE_URL")
+    MONGODB_URL: Optional[Any] = config("MONGODB_URL")
 
     SMTP_TLS: bool = True
     SMTP_PORT: Optional[int] = 587

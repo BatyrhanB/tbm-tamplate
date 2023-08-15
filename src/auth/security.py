@@ -1,5 +1,3 @@
-import jwt
-
 from fastapi_users.authentication import (
     AuthenticationBackend,
     BearerTransport,
@@ -11,24 +9,11 @@ from src.settings.config import settings
 
 bearer_transport = BearerTransport(tokenUrl="auth/jwt/login")
 
-
 def get_jwt_strategy() -> JWTStrategy:
     return JWTStrategy(secret=settings.SECRET_KEY, lifetime_seconds=3600)
-
 
 auth_backend = AuthenticationBackend(
     name="jwt",
     transport=bearer_transport,
     get_strategy=get_jwt_strategy,
 )
-
-
-async def verifyEmail(token: str):
-    try:
-        payload = jwt.decode(token, settings.SECRET_KEY, algorithms="HS256")
-        # await user_collection.update_one({"email": payload["email"]}, {"$set": {"is_verified": True}})
-
-        return True
-
-    except:
-        return False

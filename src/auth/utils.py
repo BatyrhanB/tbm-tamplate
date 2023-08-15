@@ -1,7 +1,9 @@
+import secrets
 from pathlib import Path
 from fastapi_mail import MessageSchema, FastMail, ConnectionConfig
 
 from src.settings.config import settings
+from src.auth.helper import add_otp_code
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,11 +22,21 @@ conf = ConnectionConfig(
 )
 
 
-async def send_email_async(subject: str, email_to: str, body: dict):
+async def generate_otp(length=6):
+    """Asynchronous function to generate an OTP code of the specified length."""
+    if length < 1:
+        raise ValueError("OTP length must be at least 1")
+
+    return "".join(secrets.choice("0123456789") for _ in range(length))
+
+
+async def send_email_async(subject: str, email_to: str):
+    code = await generate_otp()
+    await add_otp_code(otp_data={"email": email_to, "code": code})
     message = MessageSchema(
         subject=subject,
         recipients=[email_to],
-        body=body,
+        body=code,
         subtype="html",
     )
     fm = FastMail(conf)
